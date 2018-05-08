@@ -4,6 +4,14 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 
+// 全局引入axios
+import axios from 'axios'
+Vue.prototype.$http = axios
+
+import {Button,Row,Col,Swipe, SwipeItem,Lazyload} from 'vant' //按需加载css样式
+
+Vue.use(Button).use(Row).use(Col).use(Swipe).use(SwipeItem).use(Lazyload)
+
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
