@@ -24,31 +24,64 @@
     </div>
     <!-- type bar -->
     <div class="type-bar">
-        <div v-for="(cate,index) in category" :key="index">
-            <img v-lazy="cate.image" width="90%">
-            <span>{{cate.mallCategoryName}}</span>
-        </div>
+      <div v-for="(cate,index) in category" :key="index">
+        <img v-lazy="cate.image" width="90%">
+        <span>{{cate.mallCategoryName}}</span>
+      </div>
     </div>
     <!-- adbanner -->
     <div>
-        <img v-lazy="adBanner" width="100%">
+      <img v-lazy="adBanner" width="100%">
+    </div>
+    <!-- Recommend goods -->
+    <div class="recommend-area">
+      <div class="recommend-title">
+        商品推荐
+      </div>
+      <div class="recommend-body">
+        <swiper :options="swiperOption">
+          <swiper-slide v-for="(item,index) in recommendGoods" :key="index">
+            <div class="recommend-item">
+              <img :src="item.image" width="80%">
+              <div>{{item.goodsName}}</div>
+              <div>￥{{item.price}}(￥item.mallPrice)</div>
+            </div>
+          </swiper-slide>
+        </swiper>
+      </div>
+    </div>
+
+    <div>
+      
     </div>
   </div>
 </template>
 <script>
+import { swiper, swiperSlide } from 'vue-awesome-swiper'
+import 'swiper/dist/css/swiper.css'
+
 export default {
   data() {
     return {
+      swiperOption: {
+        slidesPerView:3
+      },
       locationIcon: require('../../assets/images/location.png'),
       bannerPicArray: [
         { imageUrl: 'http://7xjyw1.com1.z0.glb.clouddn.com/simleVueDemoPic001.jpg' },
         { imageUrl: 'http://7xjyw1.com1.z0.glb.clouddn.com/simleVueDemoPic002.jpg' },
         { imageUrl: 'http://7xjyw1.com1.z0.glb.clouddn.com/simleVueDemoPic003.jpg' },
       ],
-      category:[],
-      adBanner:'',
-
+      category: [],
+      adBanner: '',
+      recommendGoods: [],
+      floor1:[],
+      floor1_0:[],
     }
+  },
+  components: {
+    swiper,
+    swiperSlide
   },
   created() {
     this.$http({
@@ -57,10 +90,11 @@ export default {
       })
       .then(res => {
         console.log(res)
-        if(res.status == 200){
-            this.category = res.data.data.category;
-            this.adBanner = res.data.data.advertesPicture.PICTURE_ADDRESS;
-            this.bannerPicArray = res.data.data.slides;
+        if (res.status == 200) {
+          this.category = res.data.data.category;
+          this.adBanner = res.data.data.advertesPicture.PICTURE_ADDRESS;
+          this.bannerPicArray = res.data.data.slides;
+          this.recommendGoods = res.data.data.recommend;
         }
 
       })
@@ -99,19 +133,43 @@ export default {
   overflow: hidden;
 }
 
-.type-bar{
-    background-color: #fff;
-    margin: 0 .3rem .3rem .3rem;
-    border-radius: .3rem;
-    font-size: 14px;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
+.type-bar {
+  background-color: #fff;
+  margin: 0 .3rem .3rem .3rem;
+  border-radius: .3rem;
+  font-size: 14px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
 }
 
-.type-bar div{
-    padding: .3rem;
-    font-size: 12px;
-    text-align: center;
+.type-bar div {
+  padding: .3rem;
+  font-size: 12px;
+  text-align: center;
 }
+
+.recommend-area {
+  background-color: #fff;
+  margin-top: .3rem;
+}
+
+.recommend-title {
+  border-bottom: 1px solid #eee;
+  font-size: 14px;
+  padding: .2rem;
+  color: #e5017d;
+}
+
+.recommend-body {
+  border-bottom: 1px solid #eee;
+}
+
+.recommend-item {
+  width: 99%;
+  border-right: 1px solid #eee;
+  font-size: 12px;
+  text-align: center;
+}
+
 </style>

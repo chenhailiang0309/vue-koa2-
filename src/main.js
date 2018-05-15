@@ -4,6 +4,7 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 
+
 // 全局引入axios
 import axios from 'axios'
 Vue.prototype.$http = axios
