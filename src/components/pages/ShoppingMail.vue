@@ -50,9 +50,20 @@
         </swiper>
       </div>
     </div>
-
-    <div>
-      
+    <!-- floor -->
+    <div class="floor">
+      <div class="floor-anomaly">
+        <div class="floor-one"><img :src="floor1_0.image" width="100%"></div>
+        <div>
+          <div class="floor-two"><img :src="floor1_1.image" width="100%"></div>
+          <div><img :src="floor1_2.image" width="100%"></div>
+        </div>
+      </div>
+      <div class="floor-rule">
+        <div v-for="(item,index) in floor1.slice(3)" :key="index">
+          <img :src="item.image" width="100%">
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -64,7 +75,7 @@ export default {
   data() {
     return {
       swiperOption: {
-        slidesPerView:3
+        slidesPerView: 3
       },
       locationIcon: require('../../assets/images/location.png'),
       bannerPicArray: [
@@ -75,8 +86,10 @@ export default {
       category: [],
       adBanner: '',
       recommendGoods: [],
-      floor1:[],
-      floor1_0:[],
+      floor1: [],
+      floor1_0: [],
+      floor1_1: [],
+      floor1_2: [],
     }
   },
   components: {
@@ -95,6 +108,10 @@ export default {
           this.adBanner = res.data.data.advertesPicture.PICTURE_ADDRESS;
           this.bannerPicArray = res.data.data.slides;
           this.recommendGoods = res.data.data.recommend;
+          this.floor1 = res.data.data.floor1;
+          this.floor1_0 = this.floor1[0];
+          this.floor1_1 = this.floor1[1];
+          this.floor1_2 = this.floor1[2];
         }
 
       })
@@ -170,6 +187,46 @@ export default {
   border-right: 1px solid #eee;
   font-size: 12px;
   text-align: center;
+}
+
+.floor-anomaly {
+  display: flex;
+  flex-direction: row;
+  background-color: #fff;
+  border-bottom: 1px solid #ddd;
+}
+
+.floor-anomaly div {
+  width: 10rem;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.floor-one {
+  border-right: 1px solid #ddd;
+}
+
+.floor-two {
+  border-bottom: 1px solid #ddd;
+}
+
+.floor-rule {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  background-color: #fff;
+}
+
+.floor-rule div {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 10rem;
+  border-bottom: 1px solid #ddd;
+}
+
+.floor-rule div:nth-child(odd) {
+  border-right: 1px solid #ddd;
 }
 
 </style>
