@@ -44,20 +44,38 @@
             <div class="recommend-item">
               <img :src="item.image" width="80%">
               <div>{{item.goodsName}}</div>
-              <div>￥{{item.price}}(￥item.mallPrice)</div>
+              <div>￥{{item.price | moneyFilter}}(￥{{item.mallPrice | moneyFilter}})</div>
             </div>
           </swiper-slide>
         </swiper>
       </div>
     </div>
     <!-- floor -->
-    <floor :floorData="floor1"></floor>
+    <floor :floorData="floor1" :floorName="floorName"></floor>
+    <!--Hot Area-->
+    <div class="hot-area">
+      <div class="hot-title">热卖商品</div>
+      <div class="hot-goods">
+        <!--这里需要一个list组件-->
+        <van-list>
+          <van-row gutter="20">
+            <van-col span="12" v-for="(item,index) in hotGoods" :key="index">
+              <!-- <div>{{item.name}}</div> -->
+              <goods-info :goodsImage="item.image" :goodsName="item.name" :goodsPrice="item.price"></goods-info>
+            </van-col>
+          </van-row>
+        </van-list>
+      </div>
+    </div>
   </div>
 </template>
 <script>
+import url from '@/serviceAPI.config'
 import floor from '@/components/component/floorComponent'
+import goodsInfo from '@/components/component/goodsInfo'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
 import 'swiper/dist/css/swiper.css'
+import { toMoney } from '@/filter/moneyFilter.js'
 
 export default {
   data() {
@@ -75,39 +93,44 @@ export default {
       adBanner: '',
       recommendGoods: [],
       floor1: [],
-      floor1_0: [],
-      floor1_1: [],
-      floor1_2: [],
+      floorName:{},
+      hotGoods:[], // 热卖商品
     }
-  },
-  components: {
-    swiper,
-    swiperSlide,
-    floor
   },
   created() {
     this.$http({
-        url: 'https://www.easy-mock.com/mock/5aeeafc4ee70f3596f06e50d/vue+koa2-shopping/index',
+        url: url.getShopingMallInfo,
         method: 'get'
       })
       .then(res => {
-        console.log(res)
+        // console.log(res)
         if (res.status == 200) {
           this.category = res.data.data.category;
           this.adBanner = res.data.data.advertesPicture.PICTURE_ADDRESS;
           this.bannerPicArray = res.data.data.slides;
           this.recommendGoods = res.data.data.recommend;
           this.floor1 = res.data.data.floor1;
-          this.floor1_0 = this.floor1[0];
-          this.floor1_1 = this.floor1[1];
-          this.floor1_2 = this.floor1[2];
+          this.floorName = res.data.data.floorName;
+          this.hotGoods = res.data.data.hotGoods;
         }
 
       })
       .catch(error => {
         console.log(error)
       })
-  }
+  },
+  filters: {
+    moneyFilter(money) {
+      return toMoney(money)
+    }
+  },
+  components: {
+    swiper,
+    swiperSlide,
+    floor,
+    goodsInfo
+  },
+
 }
 
 </script>
@@ -135,7 +158,7 @@ export default {
 
 .swiper-area {
   clear: both;
-  max-height: 15rem;
+  max-height: 9rem;
   overflow: hidden;
 }
 
@@ -147,6 +170,7 @@ export default {
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
+  /*overflow: hidden;*/
 }
 
 .type-bar div {
@@ -176,6 +200,13 @@ export default {
   border-right: 1px solid #eee;
   font-size: 12px;
   text-align: center;
+}
+
+.hot-area {
+  text-align: center;
+  font-size: 14px;
+  height: 1.8rem;
+  line-height: 1.8rem;
 }
 
 </style>

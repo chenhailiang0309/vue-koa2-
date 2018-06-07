@@ -3,14 +3,20 @@
     <!-- floor -->
     <div class="floor">
       <div class="floor-anomaly">
-        <div class="floor-one"><img :src="floor1_0.image" width="100%"></div>
+        <div class="floor-one">
+          <img :src="floorData0.image" width="100%">
+        </div>
         <div>
-          <div class="floor-two"><img :src="floor1_1.image" width="100%"></div>
-          <div><img :src="floor1_2.image" width="100%"></div>
+          <div class="floor-two">
+            <img :src="floorData1.image" width="100%">
+          </div>
+          <div>
+            <img :src="floorData2.image" width="100%">
+          </div>
         </div>
       </div>
       <div class="floor-rule">
-        <div v-for="(item,index) in floor1.slice(3)" :key="index">
+        <div v-for="(item,index) in floorData.slice(3)" :key="index">
           <img :src="item.image" width="100%">
         </div>
       </div>
@@ -19,9 +25,24 @@
 </template>
 <script>
 export default {
-  props:['floorData'],
-  created:{
-    
+  props: ['floorData','floorName'],
+  data() {
+    return {
+      floorData0: {},
+      floorData1: {},
+      floorData2: {}
+    }
+  },
+  created(){
+
+  },
+  watch: {
+    floorData: function(val) {
+      // console.log(this.floorData);
+      this.floorData0 = this.floorData[0];
+      this.floorData1 = this.floorData[1];
+      this.floorData2 = this.floorData[2];
+    }
   }
 }
 
