@@ -1,10 +1,22 @@
 const Koa = require('koa')
 const app = new Koa()
-const { connect } = require('./database/init.js')
-
+const { connect ,initSchema} = require('./database/init.js')
+const mongoose = require('mongoose')
 ;
 (async() => {
   await connect()
+  initSchema()
+  const User = mongoose.model('User')
+  
+  let onUser = new User({
+  	username:'jspang1',password:'123456'
+  })
+  onUser.save().then(()=>{
+  	console.log('插入成功')
+  })
+
+  // let user = await User.findOne({}).exec()
+  // console.log(user)
 })()
 
 app.use(async(ctx) => {
