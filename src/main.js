@@ -9,9 +9,9 @@ import router from './router'
 import axios from 'axios'
 Vue.prototype.$http = axios
 
-import {Button,Row,Col,Swipe, SwipeItem,Lazyload,List} from 'vant' //按需加载css样式
+import {Button,Row,Col,Swipe, SwipeItem,Lazyload,List,Field,NavBar} from 'vant' //按需加载css样式
 
-Vue.use(Button).use(Row).use(Col).use(Swipe).use(SwipeItem).use(Lazyload).use(List)
+Vue.use(Button).use(Row).use(Col).use(Swipe).use(SwipeItem).use(Lazyload).use(List).use(Field).use(NavBar)
 
 Vue.config.productionTip = false
 
