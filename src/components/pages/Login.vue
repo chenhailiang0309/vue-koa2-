@@ -1,11 +1,11 @@
 <template>
   <div>
-    <van-nav-bar title="用户注册" left-text="返回" left-arrow @click-left="goBack" />
-    <div class="register-panel">
+    <van-nav-bar title="用户登录" left-text="返回" left-arrow @click-left="goBack" />
+    <div class="login-panel">
       <van-field v-model="username" label="用户名" icon="clear" placeholder="请输入用户名" required @click-icon="username = ''" :error-message="usernameErrorMsg" />
       <van-field v-model="password" type="password" label="密码" placeholder="请输入密码" required :error-message="passwordErrorMsg" />
-      <div class="register-button">
-        <van-button type="primary" size="large" @click="registerAction" :loading="openLoading">马上注册</van-button>
+      <div class="login-button">
+        <van-button type="primary" size="large" @click="loginAction" :loading="openLoading">马上登录</van-button>
       </div>
     </div>
   </div>
@@ -19,20 +19,26 @@ export default {
     return {
       username: '',
       password: '',
-      openLoading: false, //是否开启注册loading
+      openLoading: false, //是否开启登录loading
       usernameErrorMsg: '', //用户名错误时的提示信息
       passwordErrorMsg: '', //密码错误时的提示信息
     }
   },
+  created(){
+  	if(localStorage.userInfo){
+  		Toast.success('已登录')
+  		this.$router.push('/')
+  	}
+  },
   methods: {
-    registerAction() {
-      this.checkForm() && this.axiosRegisterUser()
+    loginAction() {
+      this.checkForm() && this.axiosloginUser()
     },
-    axiosRegisterUser() {
+    axiosloginUser() {
       this.openLoading = true
 
       this.$http({
-          url: url.registerUser,
+          url: url.loginUser,
           method: 'post',
           data: {
             username: this.username,
@@ -41,18 +47,30 @@ export default {
         })
         .then(res => {
           console.log(res)
-          if (res.data.code == 200) {
-            Toast.success(res.data.message)
-            this.$router.push('/')
+          if (res.data.code = 200 && res.data.message) {
+            // Toast.success('登录成功')
+            // this.$router.push('/')
+            new Promise((resolve,reject)=>{
+            	localStorage.userInfo = {username:this.username}
+            	setTimeout(()=>{
+            		resolve()
+            	},500)
+            }).then(()=>{
+            	Toast.success('登录成功')
+            	this.$router.push('/')
+            }).catch(err=>{
+            	Toast.fail('登录状态保存失败')
+            	console.log(err)
+            })
           } else {
-            console.log(res.data.message)
+            Toast.fail('登录失败')
             this.openLoading = false
-            Toast.fail('注册失败')
           }
         })
         .catch(error => {
           console.log(error)
-          Toast.fail('注册失败')
+          Toast.fail('登录失败')
+          this.openLoading = false
         })
     },
     // 表单验证
@@ -82,14 +100,14 @@ export default {
 
 </script>
 <style scoped>
-.register-panel {
+.login-panel {
   width: 96%;
   border-radius: 5px;
   margin: 20px auto;
   padding-bottom: 50px;
 }
 
-.register-button {
+.login-button {
   padding-top: 10px;
 }
 
