@@ -1,0 +1,85 @@
+const Router = require('koa-router')
+let router = new Router()
+
+const path = require('path') // 路径模块  获取绝对路径
+
+const mongoose = require('mongoose')
+const fs = require('fs')
+
+// 插入商品信息到数据库
+router.get('/insertAllGoodsInfo', async(ctx) => {
+  const fsPath = path.join(__dirname, '../data_json/newGoods.json')
+  fs.readFile(fsPath, 'utf8', (err, data) => {
+    data = JSON.parse(data)
+    let saveCount = 0
+
+    const Goods = mongoose.model('Goods')
+    data.map((value, index) => {
+      let newGoods = new Goods(value)
+      newGoods.save().then(() => {
+        saveCount++
+        // console.log('成功' + saveCount)
+      }).catch(error => {
+        console.log('失败' + error)
+      })
+    })
+  })
+  ctx.body = "导入数据"
+})
+
+// 插入商品大类到数据库
+router.get('/insertAllCategory', async(ctx) => {
+  const fsPath = path.join(__dirname, '../data_json/category.json')
+  fs.readFile(fsPath, 'utf8', (err, data) => {
+    data = JSON.parse(data)
+    let saveCount = 0;
+
+    const Category = mongoose.model('Category')
+    data.RECORDS.map((value, index) => {
+      let newCategory = new Category(value)
+      newCategory.save().then(() => {
+        saveCount++
+        // console.log('成功' + saveCount)
+      }).catch(errpr => {
+        console.log('error' + error)
+      })
+    })
+  })
+  ctx.body = '导入商品大类'
+})
+
+// 插入商品子类到数据库
+router.get('/insertAllCategorySub', async(ctx) => {
+  const fsPath = path.join(__dirname, '../data_json/category_sub.json')
+  fs.readFile(fsPath, 'utf8', (err, data) => {
+    data = JSON.parse(data)
+    let saveCount = 0;
+
+    const CategorySub = mongoose.model('CategorySub')
+    data.RECORDS.map((value, index) => {
+      let newCategorySub = new CategorySub(value)
+      newCategorySub.save().then(() => {
+        saveCount++
+        // console.log('成功'+saveCount)
+      }).catch(error => {
+        console.log('失败' + error)
+      })
+    })
+  })
+  ctx.body = '导入子类数据'
+})
+
+// 商品详情页数据接口
+router.post('/getDetailGoodsInfo', async(ctx) => {
+  let goodsId = ctx.request.body.goodsId
+  const Goods = mongoose.model('Goods')
+  await Goods.findOne({ ID: goodsId }).exec()
+    .then(async(res) => {
+      ctx.body = { code: 200, message: result }
+    })
+    .catch(error => {
+      ctx.body = { code: 500, message: error }
+    })
+})
+
+module.exports = router;
