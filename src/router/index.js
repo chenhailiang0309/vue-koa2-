@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import ShoppingMail from '@/components/pages/ShoppingMail'
 import Register from '@/components/pages/Register'
 import Login from '@/components/pages/Login'
+import Goods from '@/components/pages/Goods'
 
 Vue.use(Router)
 
@@ -23,5 +24,10 @@ export default new Router({
       name: 'Login',
       component: Login
     },
+    {
+      path: '/goods',
+      name: 'Goods',
+      component: Goods
+    }
   ]
 })

@@ -60,8 +60,7 @@
         <van-list>
           <van-row gutter="20">
             <van-col span="12" v-for="(item,index) in hotGoods" :key="index">
-              <!-- <div>{{item.name}}</div> -->
-              <goods-info :goodsImage="item.image" :goodsName="item.name" :goodsPrice="item.price"></goods-info>
+              <goods-info :goodsId="item.goodsId"  :goodsImage="item.image" :goodsName="item.name" :goodsPrice="item.price"></goods-info>
             </van-col>
           </van-row>
         </van-list>
@@ -72,7 +71,7 @@
 <script>
 import url from '@/serviceAPI.config'
 import floor from '@/components/component/floorComponent'
-import goodsInfo from '@/components/component/goodsInfo'
+import goodsInfo from '@/components/component/goodsInfoComponent'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
 import 'swiper/dist/css/swiper.css'
 import { toMoney } from '@/filter/moneyFilter.js'
