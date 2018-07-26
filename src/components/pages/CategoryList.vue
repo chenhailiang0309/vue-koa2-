@@ -161,7 +161,9 @@ export default {
     onRefresh() {
       setTimeout(() => {
         this.isRefresh = false;
+        this.finished = false;
         this.goodList = [];
+        this.page =1;
         this.onLoad();
       }, 500);
     }

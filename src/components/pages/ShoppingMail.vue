@@ -173,6 +173,11 @@ export default {
 }
 
 .type-bar div {
+  -webkit-flex: 1;
+  -moz-flex: 1;
+  -ms-flex: 1;
+  -o-flex: 1;
+  flex: 1;
   padding: .3rem;
   font-size: 12px;
   text-align: center;
