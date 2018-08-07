@@ -27,13 +27,13 @@
           <div id="list-div">
             <van-pull-refresh v-model="isRefresh" @refresh="onRefresh">
               <van-list v-model="loading" :finished="finished" @load="onLoad">
-                <div class="list-item" v-for="(item,index) in goodList" :key="index">
+                <div class="list-item" @click="goGoodsInfo(item.ID)" v-for="(item,index) in goodList" :key="index">
                   <div class="list-item-img">
-                    <img :src="item.IMAGE1" width="100%">
+                    <img :src="item.IMAGE1" width="100%" :onerror="errorImg">
                   </div>
                   <div class="list-item-text">
                     <div>{{item.NAME}}</div>
-                    <div>￥{{item.ORI_PRICE}}</div>
+                    <div>￥{{item.ORI_PRICE | moneyFilter}}</div>
                   </div>
                 </div>
               </van-list>
@@ -47,6 +47,7 @@
 <script type="text/javascript">
 import url from '@/serviceAPI.config.js'
 import { Toast } from 'vant'
+import { toMoney } from '@/filter/moneyFilter.js'
 export default {
   data() {
     return {
@@ -60,6 +61,7 @@ export default {
       page: 1, // 商品列表的页数
       goodList: [], // 商品信息
       categorySubId: '', // 商品子类ID
+      errorImg: 'this.src="' + require('@/assets/images/errorimg.png') + '"', // 错误图片显示地址
     }
   },
   created() {
@@ -151,6 +153,9 @@ export default {
           console.log(error)
         })
     },
+    goGoodsInfo(id) {
+      this.$router.push({ name: 'Goods', params: { goodsId: id } })
+    },
     // 下拉加载
     onLoad() {
       setTimeout(() => {
@@ -163,9 +168,14 @@ export default {
         this.isRefresh = false;
         this.finished = false;
         this.goodList = [];
-        this.page =1;
+        this.page = 1;
         this.onLoad();
       }, 500);
+    }
+  },
+  filters: {
+    moneyFilter(money) {
+      return toMoney(money)
     }
   }
 }
